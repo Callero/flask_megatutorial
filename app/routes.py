@@ -1,25 +1,25 @@
 from flask import render_template, flash, redirect, url_for, request
-from app import app
-from app.forms import LoginForm
 from flask_login import current_user, login_user, logout_user, login_required
+from app import app, db
+from app.forms import LoginForm
 from app.models import User
+
 
 @app.route('/')
 @app.route('/index')
 @login_required
 def index():
-    user = {'username': 'Calle'}
     posts = [
         {
-            'author': {'username': 'Olle'},
-            'body': 'Snart jul!'
+            'author': {'username': 'John'},
+            'body': 'Beautiful day in Portland!'
         },
         {
-            'author': {'username': 'Sussie'},
-            'body': 'Kalle Anka!'
+            'author': {'username': 'Susan'},
+            'body': 'The Avengers movie was so cool!'
         }
     ]
-    return render_template('index.html', title='Homepage', user=user, posts=posts)
+    return render_template('index.html', title='Home', posts=posts)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -36,7 +36,7 @@ def login():
         next_page = request.args.get('next')
         if not next_page or not next_page.startswith('/'):
             next_page = url_for('index')
-        return redirect(url_for('index'))
+        return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
 
